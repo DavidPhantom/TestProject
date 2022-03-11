@@ -16,16 +16,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include
-from validformapp import views
+from authapp import views
 
 from django.conf.urls.static import static
 from django.conf import settings
 
+from django.contrib.auth import views as auth_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', views.home, name='index'),
-    # re_path(r'^$', views.home, name='home'),
+    re_path(r'^$', views.home, name='home'),
+    re_path(r'authapp/login/$', auth_views.LoginView.as_view(template_name='authapp/login.html'),
+            name='authapp-login'),
+    re_path(r'authapp/logout/$', auth_views.LogoutView.as_view(next_page='/'),
+            name='authapp-logout'),
+    re_path(r'authapp/$', views.authapp_home, name='authapp-home'),
+
+    re_path(r'^authapp/sign-up', views.authapp_sign_up, name='authapp-sign-up'),
+
     # re_path(r'^(?P<pizza_id>\d+)/$', views.pizza_detail, name='pizza_detail'),
     # path('test_app/', include('testurlapp.test_urls')),
-    re_path(r'formpage/', views.form_page, name='form_page'),
+    # re_path(r'formpage/', views.form_page, name='form_page'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
